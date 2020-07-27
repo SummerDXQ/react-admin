@@ -1,15 +1,10 @@
-import React,{Component,Fragment} from "react";
+import React,{Component} from "react";
 import './index.less';
 import logo from '../../assets/images/logo.png';
 import {Link} from 'react-router-dom';
 import { Menu } from 'antd';
 import {
     AppstoreOutlined,
-    MenuUnfoldOutlined,
-    MenuFoldOutlined,
-    PieChartOutlined,
-    DesktopOutlined,
-    ContainerOutlined,
     MailOutlined,
 } from '@ant-design/icons';
 import menuList from "../../config/menuConfig";
