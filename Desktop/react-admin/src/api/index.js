@@ -28,3 +28,12 @@ export const reqWeather = (city) => {
         }
     )
 }
+
+// get category list
+export const reqCategory = (parentId) => ajax(BASE + '/manage/category/list', {parentId});
+
+// add category
+export const reqAddCategory = (categoryName,parentId) => ajax(BASE + '/manage/category/add', {categoryName,parentId},'POST');
+
+// update category
+export const reqUpdateCategory = (categoryId,categoryName) => ajax(BASE + '/manage/category/update', {categoryId,categoryName},'POST');

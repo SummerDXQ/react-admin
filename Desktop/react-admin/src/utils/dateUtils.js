@@ -3,5 +3,5 @@ export function formatDate(time) {
     let date = new Date(time)
     return (date.getMonth() + 1) + '-' +
            date.getDate() + '-' +
-           date.getFullYear() + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+           date.getFullYear()+' '+ date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
 }

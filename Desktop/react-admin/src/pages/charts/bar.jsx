@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-// import './index.less';
+// import './home.less';
 
 export default class Bar extends Component{
     render() {
