@@ -1,8 +1,8 @@
 import React,{Component} from "react";
-import {Card, Select, Input, Button, Table} from 'antd';
+import {Card, Select, Input, Button, Table, message} from 'antd';
 import {PlusOutlined} from '@ant-design/icons';
 import LinkButton from "../../components/link-button";
-import {reqProducts, reqSearchProducts} from "../../api";
+import {reqProducts, reqSearchProducts, reqUpdateStatus} from "../../api";
 import {PAGE_SIZE} from "../../utils/constants";
 
 const Option = Select.Option;
@@ -16,7 +16,7 @@ export default class ProductHome extends Component{
         searchType:'productName'
     }
 
-    initColumns = () => {
+    initColumns = () =>  {
         this.columns = [
             {
                 title: 'Product Name',
@@ -33,13 +33,19 @@ export default class ProductHome extends Component{
             },
             {
                 title: 'Status',
-                dataIndex: 'status',
+                // dataIndex: 'status',
                 width:100,
-                render: (status) => {
+                render: (product) => {
+                    const {status, _id} = product;
                     return (
                         <span>
-                            <Button type='primary'>下架</Button>
-                            <span>在售</span>
+                            <Button
+                                type='primary'
+                                onClick={()=>this.updateStatus(_id, status === 1 ? 2 : 1)}
+                            >
+                                {status === 1 ? '下架' : '上架'}
+                            </Button>
+                            <span>{status === 1 ? '在售' : '已下架'}</span>
                         </span>
                     )
                 }
@@ -50,8 +56,16 @@ export default class ProductHome extends Component{
                 render: (product) => {
                     return (
                         <span>
-                            <LinkButton>Detail</LinkButton>
-                            <LinkButton>Edit</LinkButton>
+                            <LinkButton
+                                onClick={()=>this.props.history.push('/product/detail',{product})}
+                            >
+                                Detail
+                            </LinkButton>
+                            <LinkButton
+                                onClick={()=>this.props.history.push('/product/detail',product)}
+                            >
+                                Edit
+                            </LinkButton>
                         </span>
                     )
                 }
@@ -59,8 +73,18 @@ export default class ProductHome extends Component{
         ];
     }
 
+    // update product status
+    updateStatus = async (productId,status) => {
+        const result = await reqUpdateStatus(productId,status);
+        if (result.status === 0){
+            message.success('Successfully update product status!');
+            this.getProducts(this.pageNum);
+        }
+    }
+
     // get products
     getProducts = async (pageNum) => {
+        this.pageNum = pageNum;
         this.setState({
             loading : true
         })
@@ -118,7 +142,7 @@ export default class ProductHome extends Component{
             </span>
         );
         const extra = (
-            <Button type='primary'>
+            <Button type='primary' onClick={()=>this.props.history.push('/product/addupdate')}>
                 <PlusOutlined />
                 Add Product
             </Button>

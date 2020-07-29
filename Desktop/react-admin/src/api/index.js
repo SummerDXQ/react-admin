@@ -47,3 +47,9 @@ export const reqSearchProducts = ({pageNum,pageSize, searchName, searchType}) =>
     pageSize,
     [searchType] : searchName
 });
+
+// get category base on category ID
+export const reqCategoryInfo = (categoryId) => ajax(BASE + `/manage/category/info`,{categoryId});
+
+// update product status
+export const reqUpdateStatus = (productId,status) => ajax(BASE + `/manage/product/updateStatus`,{productId,status},'POST');
