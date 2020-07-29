@@ -3,6 +3,7 @@ import {Card, Form, Input, Cascader, Upload, Button} from 'antd';
 import LinkButton from "../../components/link-button";
 import {ArrowLeftOutlined } from '@ant-design/icons';
 import {reqCategory} from "../../api";
+import PicturesWall from "./pictures-wall";
 
 const Item = Form.Item;
 const {TextArea} = Input;
@@ -11,6 +12,11 @@ export default class ProductAddUpdate extends Component{
     state = {
         options : [],
     };
+
+    constructor(props) {
+        super(props);
+        this.myRef = React.createRef();
+    }
 
     // get category list
     getCategories = async (parentId) => {
@@ -69,6 +75,7 @@ export default class ProductAddUpdate extends Component{
     // submit form data
     submit = (values) => {
         console.log(values);
+        console.log(this.myRef.current.getImgs());
     }
 
     // validate price
@@ -110,7 +117,7 @@ export default class ProductAddUpdate extends Component{
 
     render() {
         const {isUpdate, product} = this;
-        const {pCategoryId, categoryId} = product;
+        const {pCategoryId, categoryId, imgs} = product;
         // for cascader
         const categoryIds = [];
         if (isUpdate){
@@ -185,9 +192,9 @@ export default class ProductAddUpdate extends Component{
                     <Item
                         label='Product Image'
                         name='image'
-                        rules={[{ required: true, message: 'product image is required!' }]}
+                        // rules={[{ required: true, message: 'product image is required!' }]}
                     >
-                        <Input placeholder='product name'/>
+                        <PicturesWall ref={this.myRef} imgs={imgs}/>
                     </Item>
                     <Item
                         label='Product Detail'

@@ -53,3 +53,6 @@ export const reqCategoryInfo = (categoryId) => ajax(BASE + `/manage/category/inf
 
 // update product status
 export const reqUpdateStatus = (productId,status) => ajax(BASE + `/manage/product/updateStatus`,{productId,status},'POST');
+
+// delete Image
+export const reqDeleteImg = (name) => ajax(BASE+'/manage/img/delete',{name},'POST');
