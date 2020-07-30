@@ -1,7 +1,6 @@
-import React from 'react'
-// import PropTypes from 'prop-types'
-import { Upload, Icon, Modal, message } from 'antd'
-import {reqDeleteImg} from '../../api'
+import React from 'react';
+import { Upload, Icon, Modal, message } from 'antd';
+import {reqDeleteImg} from '../../api';
 import {BASE_IMG_URL} from "../../utils/constants";
 
 
@@ -13,12 +12,10 @@ export default class PicturesWall extends React.Component {
     }
 
     constructor (props) {
-        super(props)
-
-        let fileList = []
-
+        super(props);
+        let fileList = [];
         // if imgs has data
-        const {imgs} = this.props
+        const {imgs} = this.props;
         if (imgs && imgs.length > 0) {
             fileList = imgs.map((img, index) => ({
                 uid: -index,
@@ -36,9 +33,7 @@ export default class PicturesWall extends React.Component {
         }
     }
 
-    /*
-    获取所有已上传图片文件名的数组
-     */
+    // get all uploaded images
     getImgs  = () => {
         return this.state.fileList.map(file => file.name)
     }
@@ -48,7 +43,7 @@ export default class PicturesWall extends React.Component {
 
     handlePreview = file => {
         console.log('handlePreview()', file)
-        // 显示指定file对应的大图
+        // preview image
         this.setState({
             previewImage: file.url || file.thumbUrl,  // file.thumbUrl: base64
             previewVisible: true,
@@ -96,7 +91,7 @@ export default class PicturesWall extends React.Component {
         return (
             <div>
                 <Upload
-                    action="/manage/img/upload"       /*upload image API*/
+                    action="/manage/img/upload/"       /*upload image API*/
                     accept='image/*'
                     name='image'                      /*param name*/
                     listType="picture-card"

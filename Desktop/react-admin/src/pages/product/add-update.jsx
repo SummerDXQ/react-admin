@@ -1,9 +1,11 @@
 import React,{Component} from "react";
-import {Card, Form, Input, Cascader, Upload, Button} from 'antd';
+import {Card, Form, Input, Cascader, Upload, Button, message} from 'antd';
 import LinkButton from "../../components/link-button";
 import {ArrowLeftOutlined } from '@ant-design/icons';
-import {reqCategory} from "../../api";
+import {reqCategory, reqAddOrUpdateProduct} from "../../api";
 import PicturesWall from "./pictures-wall";
+import RichTextEditor from "./rich-text-editor";
+// import detail from "./detail";
 
 const Item = Form.Item;
 const {TextArea} = Input;
@@ -16,6 +18,7 @@ export default class ProductAddUpdate extends Component{
     constructor(props) {
         super(props);
         this.myRef = React.createRef();
+        this.editor = React.createRef();
     }
 
     // get category list
@@ -24,6 +27,7 @@ export default class ProductAddUpdate extends Component{
         if (result.status === 0){
             const categories = result.data;
             if (parentId === '0'){
+                // get first classification category
                 this.initOptions(categories);
             }else {
                 return categories;   // async function returns promise
@@ -41,7 +45,7 @@ export default class ProductAddUpdate extends Component{
             }
         })
         const {isUpdate, product} = this;
-        const {pCategoryId, categoryId} = product;
+        const {pCategoryId} = product;
         if (isUpdate && pCategoryId !== '0'){
             // get secondary classification list
             const subCategories = await this.getCategories(pCategoryId);
@@ -73,9 +77,29 @@ export default class ProductAddUpdate extends Component{
     }
 
     // submit form data
-    submit = (values) => {
-        console.log(values);
-        console.log(this.myRef.current.getImgs());
+    submit = async (values) => {
+        const {name, desc, price,category} = values;
+        let pCategoryId,categoryId;
+        if(category.length === 1){
+            pCategoryId = '0';
+            categoryId = category[0];
+        }else {
+            pCategoryId = category[0];
+            categoryId = category[1];
+        }
+        const imgs = this.myRef.current.getImgs();
+        const detail = this.editor.current.getDetail();
+        const product = {name, desc, price,imgs,detail,pCategoryId,categoryId};
+        if (this.isUpdate){
+            product._id = this.product._id;
+        }
+        const result = await reqAddOrUpdateProduct(product);
+        if (result.status === 0){
+            message.success(`${this.isUpdate ? 'Successfully update product!' : 'Successfully add product!'}`);
+            this.props.history.goBack();
+        }else {
+            message.error(`${this.isUpdate ? 'Update product failed!' : 'Add product failed!'}`);
+        }
     }
 
     // validate price
@@ -109,6 +133,7 @@ export default class ProductAddUpdate extends Component{
             targetOption.isLeaf = true;
         }
 
+        console.log(this.state.options);
         // update options
         this.setState({
             options: [...this.state.options],
@@ -117,7 +142,9 @@ export default class ProductAddUpdate extends Component{
 
     render() {
         const {isUpdate, product} = this;
-        const {pCategoryId, categoryId, imgs} = product;
+        const {pCategoryId, categoryId, imgs, detail, desc} = product;
+        console.log('product');
+        console.log(detail);
         // for cascader
         const categoryIds = [];
         if (isUpdate){
@@ -157,9 +184,9 @@ export default class ProductAddUpdate extends Component{
                     </Item>
                     <Item
                         label='Product Description'
-                        name='description'
+                        name='desc'
                         rules={[{ required: true, message: 'product description is required!' }]}
-                        initialValue={product.desc}
+                        initialValue={desc}
                     >
                         <TextArea placeholder='product description' autoSize={{ minRows: 2, maxRows: 6 }}/>
                     </Item>
@@ -182,6 +209,7 @@ export default class ProductAddUpdate extends Component{
                         label='Product Category'
                         name='category'
                         rules={[{ required: true, message: 'product category is required!' }]}
+                        initialValue={categoryIds}
                     >
                         <Cascader
                             placeholder='please select product category'
@@ -192,6 +220,7 @@ export default class ProductAddUpdate extends Component{
                     <Item
                         label='Product Image'
                         name='image'
+                        initialValue={imgs}
                         // rules={[{ required: true, message: 'product image is required!' }]}
                     >
                         <PicturesWall ref={this.myRef} imgs={imgs}/>
@@ -199,9 +228,12 @@ export default class ProductAddUpdate extends Component{
                     <Item
                         label='Product Detail'
                         name='detail'
-                        rules={[{ required: true, message: 'product name is required!' }]}
+                        // rules={[{ required: true, message: 'product name is required!' }]}
+                        labelCol={{span:2}}
+                        wrapperCol={{span:20}}
+                        // initialValue={detail}
                     >
-                        <Input placeholder='product name'/>
+                        <RichTextEditor ref={this.editor} detail={detail}/>
                     </Item>
                     <Button
                         type='primary'
