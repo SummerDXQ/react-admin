@@ -101,7 +101,6 @@ export default class Category extends Component{
 
     // show update modal
     showUpdate = (category) => {
-        console.log(category.name);
         // save category info
         this.category = category;
         this.setState({

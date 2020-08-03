@@ -42,7 +42,6 @@ export default class PicturesWall extends React.Component {
     handleCancel = () => this.setState({ previewVisible: false });
 
     handlePreview = file => {
-        console.log('handlePreview()', file)
         // preview image
         this.setState({
             previewImage: file.url || file.thumbUrl,  // file.thumbUrl: base64

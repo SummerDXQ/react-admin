@@ -133,7 +133,6 @@ export default class ProductAddUpdate extends Component{
             targetOption.isLeaf = true;
         }
 
-        console.log(this.state.options);
         // update options
         this.setState({
             options: [...this.state.options],
@@ -143,8 +142,6 @@ export default class ProductAddUpdate extends Component{
     render() {
         const {isUpdate, product} = this;
         const {pCategoryId, categoryId, imgs, detail, desc} = product;
-        console.log('product');
-        console.log(detail);
         // for cascader
         const categoryIds = [];
         if (isUpdate){
