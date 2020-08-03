@@ -55,6 +55,8 @@ class Header extends Component{
             onOk:() => {
                 storageUtils.removeUser();
                 memoryUtils.user={};
+                // redirect to login
+                this.props.history.replace('/login')
             },
             onCancel:() => {
                 return;

@@ -3,6 +3,7 @@ const menuList = [
         title: 'Home',
         key: '/home',
         icon: 'PieChartOutlined',
+        isPublic:true
     },
     {
         title: 'Product',

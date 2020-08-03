@@ -6,6 +6,7 @@ import AddForm from "./add-form";
 import AuthForm from "./auth-form";
 import memoryUtils from "../../utils/memoryUtils";
 import {formatDate} from "../../utils/dateUtils";
+import storageUtils from "../../utils/storageUtils";
 
 export default class Role extends Component{
     state = {
@@ -82,7 +83,6 @@ export default class Role extends Component{
     }
 
     updateRole = async () => {
-        // debugger;
         this.setState({isShowAuth:false});
         const role = this.state.role;
         const menus = this.auth.current.getMenus();
@@ -93,8 +93,16 @@ export default class Role extends Component{
         // update role
         const result = await reqUpdateRole(role);
         if (result.status === 0){
-            message.success('Successfully update role!')
-            this.getRoles();
+            // update one own role
+            if(role._id === memoryUtils.user.role_id){
+                memoryUtils.user = {};
+                storageUtils.removeUser();
+                this.props.history.replace('/login');
+                message.success('Successfully update your role, please login again!')
+            }else {
+                message.success('Successfully update role!')
+                this.getRoles();
+            }
         }else {
             message.error('Failed to update role!')
         }
@@ -125,7 +133,15 @@ export default class Role extends Component{
                     dataSource={roles}
                     columns={this.columns}
                     pagination={{defaultPageSize : PAGE_SIZE}}
-                    rowSelection={{type:'radio',selectedRowKeys : [role._id]}}
+                    rowSelection={{
+                        type:'radio',
+                        selectedRowKeys : [role._id],
+                        onSelect : (role) => {
+                            this.setState({
+                                role
+                            })
+                        }
+                    }}
                     onRow={this.onRow}
                 />
 
