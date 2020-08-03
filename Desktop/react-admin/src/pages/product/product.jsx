@@ -15,5 +15,5 @@ export default class Product extends Component{
                 <Redirect to='/product'/>
             </Switch>
         )
-    }
+    }j
 }
